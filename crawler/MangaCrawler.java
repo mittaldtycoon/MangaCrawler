@@ -87,7 +87,7 @@ public class MangaCrawler {
 
 		// Create the manga parent folder
 		File mangaDir = new File(mangaDirectory);
-		if (!mangaDir.exists() && mangaDir.mkdir()) {
+		if (mangaDir.mkdir()) {
 			System.out.println("Directory: " + mangaDirectory + " created");
 		} else {
 			return false;
@@ -105,7 +105,8 @@ public class MangaCrawler {
 			String chapterDirectory = mangaDirectory + "\\" + chapterName;
 
 			// Create the chapter subfolder
-			if (new File(chapterDirectory).mkdir()) {
+			File chapterDir = new File(chapterDirectory);
+			if (!chapterDir.exists() && chapterDir.mkdir()) {
 				System.out.println("Subdirectory: " + chapterDirectory + " created");
 				
 				ChapterpageParser chapterParser = new ChapterpageParser(
