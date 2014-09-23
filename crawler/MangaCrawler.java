@@ -87,10 +87,12 @@ public class MangaCrawler {
 
 		// Create the manga parent folder
 		File mangaDir = new File(mangaDirectory);
-		if (mangaDir.mkdir()) {
+		if (!mangaDir.exists() && mangaDir.mkdir()) {
 			System.out.println("Directory: " + mangaDirectory + " created");
-		} else {
+		} else if (!mangaDir.exists()) {
 			return false;
+		} else if (mangaDir.exists()) {
+			System.out.println("Directory: " + mangaDirectory + " already existed");
 		}
 		
 		this.threadWait(MangaCrawler.waitTimeLong);
@@ -134,11 +136,11 @@ public class MangaCrawler {
 					this.threadWait(MangaCrawler.waitTimeShort);
 					System.out.println("Download "+imageLink+" to "+imageLocation);
 				}
+				this.threadWait(MangaCrawler.waitTimeLong);
 			} else {
+				System.out.println("Subdirectory: " + chapterDirectory + " already exists");
 				continue;
 			}
-			
-			this.threadWait(MangaCrawler.waitTimeLong);
 		}
 
 		return true;
@@ -146,7 +148,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://truyen.vnsharing.net/Truyen/Ai-Kora/");
+				"http://truyen.vnsharing.net/Truyen/Yaiba-BlogTruyen-Scan-Group");
 
 		if (crawler.crawl()) {
 
