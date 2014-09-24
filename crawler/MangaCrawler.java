@@ -84,6 +84,7 @@ public class MangaCrawler {
 
 		mangaName = MangaCrawler.cleanFileName(mangaName);
 		String mangaDirectory = MangaCrawler.rootDir + mangaName;
+		mangaDirectory = Helper.removeAccents(mangaDirectory);
 
 		// Create the manga parent folder
 		File mangaDir = new File(mangaDirectory);
@@ -105,6 +106,7 @@ public class MangaCrawler {
 
 			chapterName = MangaCrawler.cleanFileName(chapterName);
 			String chapterDirectory = mangaDirectory + "\\" + chapterName;
+			chapterDirectory = Helper.removeAccents(chapterDirectory);
 
 			// Create the chapter subfolder
 			File chapterDir = new File(chapterDirectory);
@@ -148,7 +150,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://truyen.vnsharing.net/Truyen/Yaiba-BlogTruyen-Scan-Group");
+				"http://truyen.vnsharing.net/Truyen/Dragon-Ball?id=965");
 
 		if (crawler.crawl()) {
 
