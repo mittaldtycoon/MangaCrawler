@@ -1,5 +1,9 @@
 package crawler;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 

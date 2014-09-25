@@ -2,9 +2,11 @@ package crawler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -135,6 +137,29 @@ public class NetworkingFunctions {
 				connection.disconnect();
 			}
 		}
+	}
+	
+	
+	public static boolean downloadImage(String imageLink, String location) {
+		try {
+			URL url = new URL(imageLink);
+			InputStream is = url.openStream();
+			OutputStream os = new FileOutputStream(location);
+
+			byte[] b = new byte[1024 * 1024 * 10];
+			int length;
+
+			while ((length = is.read(b)) != -1) {
+				os.write(b, 0, length);
+			}
+
+			is.close();
+			os.close();
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 }
 

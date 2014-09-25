@@ -36,28 +36,6 @@ public class MangaCrawler {
 		return fileName;
 	}
 
-	private boolean downloadImage(String imageLink, String location) {
-		try {
-			URL url = new URL(imageLink);
-			InputStream is = url.openStream();
-			OutputStream os = new FileOutputStream(location);
-
-			byte[] b = new byte[1024 * 1024 * 10];
-			int length;
-
-			while ((length = is.read(b)) != -1) {
-				os.write(b, 0, length);
-			}
-
-			is.close();
-			os.close();
-		} catch (Exception e) {
-			return false;
-		}
-
-		return true;
-	}
-
 	public void threadWait (long milisec) {
 		try {
 			Thread.sleep(milisec);
@@ -132,7 +110,7 @@ public class MangaCrawler {
 						continue;
 					
 					String imageLocation = chapterDirectory + "\\" + imageOrder + ".jpg";
-					if (!this.downloadImage(imageLink, imageLocation))
+					if (!NetworkingFunctions.downloadImage(imageLink, imageLocation))
 						continue;
 					
 					this.threadWait(MangaCrawler.waitTimeShort);
@@ -150,7 +128,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://truyen.vnsharing.net/Truyen/Dragon-Ball?id=965");
+				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-");
 
 		if (crawler.crawl()) {
 
