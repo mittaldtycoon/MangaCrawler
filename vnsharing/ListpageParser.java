@@ -1,4 +1,4 @@
-package crawler;
+package vnsharing;
 
 import java.net.MalformedURLException;
 import java.net.URL;

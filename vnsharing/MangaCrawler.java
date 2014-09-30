@@ -1,4 +1,4 @@
-package crawler;
+package vnsharing;
 
 import java.io.*;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package crawler;
+package vnsharing;
 
 import java.util.HashMap;
 import java.util.Map;
