@@ -1,7 +1,9 @@
-package vnsharing;
+package mangaCrawler;
 
-import java.io.*;
-import java.net.URL;
+import helper.Helper;
+import helper.NetworkingFunctions;
+
+import java.io.File;
 import java.util.Map;
 
 public class MangaCrawler {
@@ -48,7 +50,7 @@ public class MangaCrawler {
 		if (this.mangaLink == null)
 			return false;
 
-		ListpageParser listPageParser = new ListpageParser(this.mangaLink);
+		VnSharing_ListpageParser listPageParser = new VnSharing_ListpageParser(this.mangaLink);
 
 		if (!listPageParser.parseInfo())
 			return false;
@@ -91,7 +93,7 @@ public class MangaCrawler {
 			if (!chapterDir.exists() && chapterDir.mkdir()) {
 				System.out.println("Subdirectory: " + chapterDirectory + " created");
 				
-				ChapterpageParser chapterParser = new ChapterpageParser(
+				VnSharing_ChapterpageParser chapterParser = new VnSharing_ChapterpageParser(
 						chapterLink);
 
 				if (!chapterParser.parseImageLinks())
@@ -128,7 +130,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-");
+				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-?id=1052");
 
 		if (crawler.crawl()) {
 

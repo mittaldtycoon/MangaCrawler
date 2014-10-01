@@ -1,31 +1,12 @@
-package vnsharing;
+package mangaCrawler;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.jsoup.nodes.Document;
+import helper.NetworkingFunctions;
 
-public class ChapterpageParser {
-	private final int numRetryDownloadPage = 2;
-	private final String linkPrefix = "http://truyen.vnsharing.net/";
+import helper.Helper;
 
-	private Document doc = null;
-	private String chapterLink = null;
-	private Map<Integer, String> imageOrderToLinkMap = null;
-
-	public ChapterpageParser(String chapterLink) {
-		if (chapterLink == null)
-			return;
-
-		this.chapterLink = chapterLink;
-
-		if (!this.chapterLink.contains(this.linkPrefix))
-			return;
-
-		this.imageOrderToLinkMap = new HashMap<Integer, String>();
-	}
-
-	public Map<Integer, String> getImageOrderToLinkMap() {
-		return this.imageOrderToLinkMap;
+public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
+	public VnSharing_ChapterpageParser(String chapterLink) {
+		super(chapterLink, "http://truyen.vnsharing.net/");
 	}
 
 	public boolean parseImageLinks() {
@@ -55,6 +36,7 @@ public class ChapterpageParser {
 				break;
 			
 			String imageLink = htmlContent.substring(0, endIndex);
+			imageLink = Helper.formatUrl(imageLink);
 			
 			System.out.println(i + " : " + imageLink);
 			this.imageOrderToLinkMap.put(i, imageLink);
@@ -66,11 +48,11 @@ public class ChapterpageParser {
 	}
 
 	public static void main(String[] args) {
-		ChapterpageParser crawler = new ChapterpageParser(
-				"http://truyen.vnsharing.net/Truyen/Ai-Kora/Parts-118?id=17609");
-
-		if (crawler.parseImageLinks()) {
-
-		}
+//		VnSharing_ChapterpageParser crawler = new VnSharing_ChapterpageParser(
+//				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-/-VNS_davidtran94--Midori-no-Hibi---v01-c001?id=8368");
+//
+//		if (crawler.parseImageLinks()) {
+//
+//		}
 	}
 }

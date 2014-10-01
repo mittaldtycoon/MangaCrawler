@@ -1,16 +1,17 @@
-package vnsharing;
+package mangaCrawler;
+
+import helper.NetworkingFunctions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-// TODO rewrite the class with the link http://www.craigslist.org/about/sites
-
-public class ListpageParser {
+public class VnSharing_ListpageParser {
 	private final int numRetryDownloadPage = 2;
 	private final String linkPrefix = "http://truyen.vnsharing.net/";
 
@@ -19,7 +20,7 @@ public class ListpageParser {
 	private String listLink = null;
 	private Map<String, String> nameToLinkMap = null;
 
-	public ListpageParser(String listLink) {
+	public VnSharing_ListpageParser(String listLink) {
 		if (listLink == null)
 			return;
 
@@ -132,11 +133,11 @@ public class ListpageParser {
 	}
 
 	public static void main(String[] args) {
-		ListpageParser crawler = new ListpageParser(
-				"http://truyen.vnsharing.net/Truyen/Ai-Kora");
-
-		if (crawler.parseInfo()) {
-
-		}
+//		VnSharing_ListpageParser crawler = new VnSharing_ListpageParser(
+//				"http://truyen.vnsharing.net/Truyen/Ai-Kora");
+//
+//		if (crawler.parseInfo()) {
+//
+//		}
 	}
 }
