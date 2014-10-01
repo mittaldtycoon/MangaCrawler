@@ -26,10 +26,39 @@ public abstract class BaseChapterpageParser {
 		this.imageOrderToLinkMap = new HashMap<Integer, String>();
 	}
 	
+	protected BaseChapterpageParser(String linkPrefix) {
+		this.linkPrefix = linkPrefix;
+		
+		if (this.linkPrefix == null)
+			return;
+
+		this.imageOrderToLinkMap = new HashMap<Integer, String>();
+	}
+	
+	public boolean setChapterLink(String chapterLink) {
+		this.chapterLink = chapterLink;
+		
+		if (this.chapterLink == null || this.linkPrefix == null)
+			return false;
+		
+		if (!this.chapterLink.contains(this.linkPrefix))
+			return false;
+		
+		return true;
+	}
+	
 	// Map between the image order in the chapter and its link
 	protected Map<Integer, String> getImageOrderToLinkMap() {
 		return this.imageOrderToLinkMap;
 	}
-
-	protected abstract boolean parseImageLinks();
+	
+	public String getLinkPrefix() {
+		return this.linkPrefix;
+	}
+	
+	public boolean parseImageLinks() {
+		return this.parseImageLinks(false, null);
+	}
+	
+	protected abstract boolean parseImageLinks(boolean downloadImageInParser, String chapDir);
 }

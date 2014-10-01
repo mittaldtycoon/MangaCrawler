@@ -6,9 +6,9 @@ import java.net.URL;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class VnSharing_ListpageParser extends BaseListpageParser {
-	public VnSharing_ListpageParser(String listLink) {
-		super(listLink, "http://truyen.vnsharing.net/");
+public class MangaReader_ListpageParser extends BaseListpageParser {
+	public MangaReader_ListpageParser(String listLink) {
+		super(listLink, "http://www.mangareader.net/");
 	}
 
 	// Parse the manga name
@@ -16,7 +16,7 @@ public class VnSharing_ListpageParser extends BaseListpageParser {
 		if (this.listLink == null || this.doc == null)
 			return false;
 
-		Elements mangaNameElems = this.doc.select("a[class=bigchar]");
+		Elements mangaNameElems = this.doc.select("h1");
 
 		if (mangaNameElems.size() != 1)
 			return false;
@@ -32,7 +32,7 @@ public class VnSharing_ListpageParser extends BaseListpageParser {
 		if (this.listLink == null || this.doc == null)
 			return false;
 
-		Elements listingElems = this.doc.select("table[class=listing]");
+		Elements listingElems = this.doc.select("table[id=listing]");
 
 		// Return if the page has no listing
 		if (listingElems.size() != 1) {
@@ -75,11 +75,11 @@ public class VnSharing_ListpageParser extends BaseListpageParser {
 	}
 
 	public static void main(String[] args) {
-		// VnSharing_ListpageParser crawler = new VnSharing_ListpageParser(
-		// "http://truyen.vnsharing.net/Truyen/Ai-Kora");
-		//
-		// if (crawler.parseInfo()) {
-		//
-		// }
+//		MangaReader_ListpageParser crawler = new MangaReader_ListpageParser(
+//				"http://www.mangareader.net/711/unbalance-x-unbalance.html");
+//
+//		if (crawler.parseInfo()) {
+//
+//		}
 	}
 }

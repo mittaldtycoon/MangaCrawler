@@ -3,15 +3,14 @@ package helper;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class NetworkingFunctions {
@@ -25,7 +24,7 @@ public class NetworkingFunctions {
 								"Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
 						.timeout(10000).followRedirects(true).execute();
 				return response.parse();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// Only print out fail on the last fail
 				if (i == numRetries - 1) 
 					e.printStackTrace();

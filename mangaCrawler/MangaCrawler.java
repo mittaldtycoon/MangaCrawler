@@ -7,25 +7,36 @@ import java.io.File;
 import java.util.Map;
 
 public class MangaCrawler {
-	private static final String linkPrefix = "http://truyen.vnsharing.net/";
 	private static final String rootDir = "C:\\Skydrive\\Books\\";
 	private static final char[] fileNameInvalidChar = { '\\', '/', ':', '*',
 			'?', '<', '>', '|' };
 	private static int waitTimeShort = 500;
 	private static int waitTimeLong = 4000;
 
+	private boolean downloadImageInParser = false;
 	private String mangaLink = null;
+	private BaseListpageParser listPageParser = null;
+	private BaseChapterpageParser chapterPageParser = null;
 
 	public MangaCrawler(String mangaLink) {
-		if (mangaLink == null)
-			return;
-
-		if (!mangaLink.contains(MangaCrawler.linkPrefix))
-			return;
-
 		this.mangaLink = mangaLink;
+
+		if (this.mangaLink == null)
+			return;
+
+		if (mangaLink.contains("http://www.mangareader.net/")) {
+			this.listPageParser = new MangaReader_ListpageParser(this.mangaLink);
+			this.chapterPageParser = new MangaReader_ChapterpageParser(
+					"http://www.mangareader.net/");
+			this.downloadImageInParser = true;
+		} else if (mangaLink.contains("http://truyen.vnsharing.net/")) {
+			this.listPageParser = new VnSharing_ListpageParser(this.mangaLink);
+			this.chapterPageParser = new VnSharing_ChapterpageParser(
+					"http://truyen.vnsharing.net/");
+		}
 	}
 
+	// Sanitize the filename
 	public static String cleanFileName(String fileName) {
 		if (fileName == null)
 			return null;
@@ -38,19 +49,9 @@ public class MangaCrawler {
 		return fileName;
 	}
 
-	public void threadWait (long milisec) {
-		try {
-			Thread.sleep(milisec);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public boolean crawl() {
-		if (this.mangaLink == null)
+		if (this.mangaLink == null || this.listPageParser == null)
 			return false;
-
-		VnSharing_ListpageParser listPageParser = new VnSharing_ListpageParser(this.mangaLink);
 
 		if (!listPageParser.parseInfo())
 			return false;
@@ -73,11 +74,12 @@ public class MangaCrawler {
 		} else if (!mangaDir.exists()) {
 			return false;
 		} else if (mangaDir.exists()) {
-			System.out.println("Directory: " + mangaDirectory + " already existed");
+			System.out.println("Directory: " + mangaDirectory
+					+ " already existed");
 		}
-		
-		this.threadWait(MangaCrawler.waitTimeLong);
-		
+
+		Helper.threadWait(MangaCrawler.waitTimeLong);
+
 		// Iterate through all the chapter, create a direcotry for each and
 		// download all the images to that directory
 		for (Map.Entry<String, String> entry : chapterNameToLinkMap.entrySet()) {
@@ -91,36 +93,37 @@ public class MangaCrawler {
 			// Create the chapter subfolder
 			File chapterDir = new File(chapterDirectory);
 			if (!chapterDir.exists() && chapterDir.mkdir()) {
-				System.out.println("Subdirectory: " + chapterDirectory + " created");
-				
-				VnSharing_ChapterpageParser chapterParser = new VnSharing_ChapterpageParser(
-						chapterLink);
+				System.out.println("Subdirectory: " + chapterDirectory
+						+ " created");
 
-				if (!chapterParser.parseImageLinks())
+				if (!this.chapterPageParser.setChapterLink(chapterLink))
 					continue;
 
-				// Iterate through all the images and download them to the
-				// subdirectory
-				Map<Integer, String> imageOrderToLinkMap = chapterParser
-						.getImageOrderToLinkMap();
-				for (Map.Entry<Integer, String> imageEntry : imageOrderToLinkMap
-						.entrySet()) {
-					Integer imageOrder = imageEntry.getKey();
-					String imageLink = imageEntry.getValue();
+				if (!this.chapterPageParser.parseImageLinks(this.downloadImageInParser, chapterDirectory))
+					continue;
 
-					if (imageOrder == null || imageLink == null)
-						continue;
-					
-					String imageLocation = chapterDirectory + "\\" + imageOrder + ".jpg";
-					if (!NetworkingFunctions.downloadImage(imageLink, imageLocation))
-						continue;
-					
-					this.threadWait(MangaCrawler.waitTimeShort);
-					System.out.println("Download "+imageLink+" to "+imageLocation);
+				if (!this.downloadImageInParser) {
+					// Iterate through all the images and download them to the
+					// subdirectory
+					Map<Integer, String> imageOrderToLinkMap = this.chapterPageParser
+							.getImageOrderToLinkMap();
+					for (Map.Entry<Integer, String> imageEntry : imageOrderToLinkMap
+							.entrySet()) {
+						Integer imageOrder = imageEntry.getKey();
+						String imageLink = imageEntry.getValue();
+
+						if (!Helper.downloadAndStoreImage(imageOrder,
+								imageLink, chapterDirectory))
+							continue;
+
+						Helper.threadWait(MangaCrawler.waitTimeShort);
+					}
 				}
-				this.threadWait(MangaCrawler.waitTimeLong);
+
+				Helper.threadWait(MangaCrawler.waitTimeLong);
 			} else {
-				System.out.println("Subdirectory: " + chapterDirectory + " already exists");
+				System.out.println("Subdirectory: " + chapterDirectory
+						+ " already exists");
 				continue;
 			}
 		}
@@ -130,7 +133,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-?id=1052");
+				"http://www.mangareader.net/711/unbalance-x-unbalance.html");
 
 		if (crawler.crawl()) {
 

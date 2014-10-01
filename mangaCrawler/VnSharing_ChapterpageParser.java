@@ -9,10 +9,13 @@ public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
 		super(chapterLink, "http://truyen.vnsharing.net/");
 	}
 
-	public boolean parseImageLinks() {
-		if (this.chapterLink == null)
+	public boolean parseImageLinks(boolean downloadImageInParser, String chapDir) {
+		if (this.chapterLink == null || this.linkPrefix == null)
 			return false;
-
+		
+		if (downloadImageInParser && chapDir == null)
+			return false;
+		
 		// Download the listing page html content
 		this.doc = NetworkingFunctions.downloadHtmlContent(this.chapterLink,
 				this.numRetryDownloadPage);
@@ -40,6 +43,10 @@ public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
 			
 			System.out.println(i + " : " + imageLink);
 			this.imageOrderToLinkMap.put(i, imageLink);
+			
+			if (downloadImageInParser) {
+				Helper.downloadAndStoreImage(i, imageLink, chapDir);
+			}
 			
 			i++;
 		}

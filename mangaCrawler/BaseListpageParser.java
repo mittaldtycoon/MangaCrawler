@@ -1,5 +1,7 @@
 package mangaCrawler;
 
+import helper.NetworkingFunctions;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +39,27 @@ public abstract class BaseListpageParser {
 
 	// Parse all the information. This function will call parseMangaName and
 	// parseLink
-	protected abstract boolean parseInfo();
+	public boolean parseInfo() {
+		if (this.listLink == null)
+			return false;
+
+		// Download the listing page html content
+		this.doc = NetworkingFunctions.downloadHtmlContent(this.listLink,
+				this.numRetryDownloadPage);
+
+		if (this.doc == null)
+			return false;
+
+		// Parse the manga name
+		if (!this.parseMangaName())
+			return false;
+
+		// Parse the chapter links
+		if (!this.parseLink())
+			return false;
+
+		return true;
+	}
 
 	// Parse the manga name
 	protected abstract boolean parseMangaName();
