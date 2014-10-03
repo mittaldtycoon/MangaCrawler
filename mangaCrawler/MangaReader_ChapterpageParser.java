@@ -29,7 +29,7 @@ public class MangaReader_ChapterpageParser extends BaseChapterpageParser {
 	public boolean parseImageLinks(boolean downloadImageInParser, String chapDir) {
 		if (this.chapterLink == null || this.linkPrefix == null)
 			return false;
-		
+
 		if (downloadImageInParser && chapDir == null)
 			return false;
 

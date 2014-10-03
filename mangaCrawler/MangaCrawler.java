@@ -1,7 +1,6 @@
 package mangaCrawler;
 
 import helper.Helper;
-import helper.NetworkingFunctions;
 
 import java.io.File;
 import java.util.Map;
@@ -33,6 +32,12 @@ public class MangaCrawler {
 			this.listPageParser = new VnSharing_ListpageParser(this.mangaLink);
 			this.chapterPageParser = new VnSharing_ChapterpageParser(
 					"http://truyen.vnsharing.net/");
+			this.downloadImageInParser = false;
+		} else if (mangaLink.contains("http://www.mangahere.co/")) {
+			this.listPageParser = new MangaHere_ListpageParser(this.mangaLink);
+			this.chapterPageParser = new MangaHere_ChapterpageParser(
+					"http://www.mangahere.co/");
+			this.downloadImageInParser = true;
 		}
 	}
 
@@ -99,7 +104,8 @@ public class MangaCrawler {
 				if (!this.chapterPageParser.setChapterLink(chapterLink))
 					continue;
 
-				if (!this.chapterPageParser.parseImageLinks(this.downloadImageInParser, chapterDirectory))
+				if (!this.chapterPageParser.parseImageLinks(
+						this.downloadImageInParser, chapterDirectory))
 					continue;
 
 				if (!this.downloadImageInParser) {
@@ -133,7 +139,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://www.mangareader.net/711/unbalance-x-unbalance.html");
+				"http://www.mangareader.net/230/ichigo-100.html");
 
 		if (crawler.crawl()) {
 

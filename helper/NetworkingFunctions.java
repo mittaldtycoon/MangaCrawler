@@ -26,7 +26,7 @@ public class NetworkingFunctions {
 				return response.parse();
 			} catch (Exception e) {
 				// Only print out fail on the last fail
-				if (i == numRetries - 1) 
+				if (i == numRetries - 1)
 					e.printStackTrace();
 			}
 		}
@@ -137,8 +137,7 @@ public class NetworkingFunctions {
 			}
 		}
 	}
-	
-	
+
 	public static boolean downloadImage(String imageLink, String location) {
 		try {
 			URL url = new URL(imageLink);
@@ -161,4 +160,3 @@ public class NetworkingFunctions {
 		return true;
 	}
 }
-

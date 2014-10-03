@@ -12,10 +12,10 @@ public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
 	public boolean parseImageLinks(boolean downloadImageInParser, String chapDir) {
 		if (this.chapterLink == null || this.linkPrefix == null)
 			return false;
-		
+
 		if (downloadImageInParser && chapDir == null)
 			return false;
-		
+
 		// Download the listing page html content
 		this.doc = NetworkingFunctions.downloadHtmlContent(this.chapterLink,
 				this.numRetryDownloadPage);
@@ -25,29 +25,30 @@ public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
 
 		String htmlContent = this.doc.outerHtml();
 		String imagePrefix = "lstImages.push(\"";
-		
+
 		int i = 1;
 		while (true) {
 			int startIndex = htmlContent.indexOf(imagePrefix);
 			if (startIndex == -1)
 				break;
-			
-			htmlContent = htmlContent.substring(startIndex+imagePrefix.length());
-			
+
+			htmlContent = htmlContent.substring(startIndex
+					+ imagePrefix.length());
+
 			int endIndex = htmlContent.indexOf("\"");
 			if (endIndex == -1)
 				break;
-			
+
 			String imageLink = htmlContent.substring(0, endIndex);
 			imageLink = Helper.formatUrl(imageLink);
-			
+
 			System.out.println(i + " : " + imageLink);
 			this.imageOrderToLinkMap.put(i, imageLink);
-			
+
 			if (downloadImageInParser) {
 				Helper.downloadAndStoreImage(i, imageLink, chapDir);
 			}
-			
+
 			i++;
 		}
 
@@ -55,11 +56,12 @@ public class VnSharing_ChapterpageParser extends BaseChapterpageParser {
 	}
 
 	public static void main(String[] args) {
-//		VnSharing_ChapterpageParser crawler = new VnSharing_ChapterpageParser(
-//				"http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-/-VNS_davidtran94--Midori-no-Hibi---v01-c001?id=8368");
-//
-//		if (crawler.parseImageLinks()) {
-//
-//		}
+		// VnSharing_ChapterpageParser crawler = new
+		// VnSharing_ChapterpageParser(
+		// "http://truyen.vnsharing.net/Truyen/midori-no-hibi-tiep-/-VNS_davidtran94--Midori-no-Hibi---v01-c001?id=8368");
+		//
+		// if (crawler.parseImageLinks()) {
+		//
+		// }
 	}
 }
