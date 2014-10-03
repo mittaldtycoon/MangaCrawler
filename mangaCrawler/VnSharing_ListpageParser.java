@@ -1,5 +1,7 @@
 package mangaCrawler;
 
+import helper.CrawlerType;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,6 +11,10 @@ import org.jsoup.select.Elements;
 public class VnSharing_ListpageParser extends BaseListpageParser {
 	public VnSharing_ListpageParser(String listLink) {
 		super(listLink, "http://truyen.vnsharing.net/");
+	}
+	
+	public CrawlerType.CRAWLER_TYPE getType() {
+		return CrawlerType.CRAWLER_TYPE.VNSHARING;
 	}
 
 	// Parse the manga name

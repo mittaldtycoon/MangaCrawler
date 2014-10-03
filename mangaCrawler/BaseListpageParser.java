@@ -1,5 +1,6 @@
 package mangaCrawler;
 
+import helper.CrawlerType;
 import helper.NetworkingFunctions;
 
 import java.util.HashMap;
@@ -66,4 +67,7 @@ public abstract class BaseListpageParser {
 
 	// Parse the chapter links
 	protected abstract boolean parseLink();
+	
+	// Return the type of the crawler
+	public abstract CrawlerType.CRAWLER_TYPE getType();
 }

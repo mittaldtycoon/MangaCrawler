@@ -1,5 +1,6 @@
 package mangaCrawler;
 
+import helper.CrawlerType;
 import helper.Helper;
 
 import java.io.File;
@@ -16,6 +17,7 @@ public class MangaCrawler {
 	private String mangaLink = null;
 	private BaseListpageParser listPageParser = null;
 	private BaseChapterpageParser chapterPageParser = null;
+	private CrawlerType.CRAWLER_TYPE type = CrawlerType.CRAWLER_TYPE.EMPTYTYPE;
 
 	public MangaCrawler(String mangaLink) {
 		this.mangaLink = mangaLink;
@@ -23,22 +25,60 @@ public class MangaCrawler {
 		if (this.mangaLink == null)
 			return;
 
+		// Decide the type of the crawler
+		if (!this.populateType(this.mangaLink))
+			return;
+		
+		// Instantiate the crawler object with the correponding type
+		if (!this.populateCrawlerObject(this.type))
+			return;
+	}
+
+	// Decide what type of crawler needed
+	protected boolean populateType(String link) {
+		if (link == null)
+			return false;
+
 		if (mangaLink.contains("http://www.mangareader.net/")) {
+			this.type = CrawlerType.CRAWLER_TYPE.MANGAREADER;
+		} else if (mangaLink.contains("http://truyen.vnsharing.net/")) {
+			this.type = CrawlerType.CRAWLER_TYPE.VNSHARING;
+		} else if (mangaLink.contains("http://www.mangahere.co/")) {
+			this.type = CrawlerType.CRAWLER_TYPE.MANGAHERE;
+		}
+
+		return this.type != CrawlerType.CRAWLER_TYPE.EMPTYTYPE;
+	}
+	
+	// Instantiate the crawler object with the correponding type
+	protected boolean populateCrawlerObject(CrawlerType.CRAWLER_TYPE type) {
+		if (type == CrawlerType.CRAWLER_TYPE.EMPTYTYPE)
+			return false;
+
+		switch (type) {
+		case MANGAREADER:
 			this.listPageParser = new MangaReader_ListpageParser(this.mangaLink);
 			this.chapterPageParser = new MangaReader_ChapterpageParser(
 					"http://www.mangareader.net/");
 			this.downloadImageInParser = true;
-		} else if (mangaLink.contains("http://truyen.vnsharing.net/")) {
+			break;
+		case VNSHARING:
 			this.listPageParser = new VnSharing_ListpageParser(this.mangaLink);
 			this.chapterPageParser = new VnSharing_ChapterpageParser(
 					"http://truyen.vnsharing.net/");
 			this.downloadImageInParser = false;
-		} else if (mangaLink.contains("http://www.mangahere.co/")) {
+			break;
+		case MANGAHERE:
 			this.listPageParser = new MangaHere_ListpageParser(this.mangaLink);
 			this.chapterPageParser = new MangaHere_ChapterpageParser(
 					"http://www.mangahere.co/");
 			this.downloadImageInParser = true;
+			break;
+		default:
+			break;
 		}
+		
+		return true;
 	}
 
 	// Sanitize the filename

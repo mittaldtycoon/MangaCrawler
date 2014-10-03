@@ -1,5 +1,7 @@
 package mangaCrawler;
 
+import helper.CrawlerType;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -10,7 +12,11 @@ public class MangaReader_ListpageParser extends BaseListpageParser {
 	public MangaReader_ListpageParser(String listLink) {
 		super(listLink, "http://www.mangareader.net/");
 	}
-
+	
+	public CrawlerType.CRAWLER_TYPE getType() {
+		return CrawlerType.CRAWLER_TYPE.MANGAREADER;
+	}
+	
 	// Parse the manga name
 	protected boolean parseMangaName() {
 		if (this.listLink == null || this.doc == null)
