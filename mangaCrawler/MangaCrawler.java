@@ -28,7 +28,7 @@ public class MangaCrawler {
 		// Decide the type of the crawler
 		if (!this.populateType(this.mangaLink))
 			return;
-		
+
 		// Instantiate the crawler object with the correponding type
 		if (!this.populateCrawlerObject(this.type))
 			return;
@@ -49,7 +49,7 @@ public class MangaCrawler {
 
 		return this.type != CrawlerType.CRAWLER_TYPE.EMPTYTYPE;
 	}
-	
+
 	// Instantiate the crawler object with the correponding type
 	protected boolean populateCrawlerObject(CrawlerType.CRAWLER_TYPE type) {
 		if (type == CrawlerType.CRAWLER_TYPE.EMPTYTYPE)
@@ -77,7 +77,7 @@ public class MangaCrawler {
 		default:
 			break;
 		}
-		
+
 		return true;
 	}
 
@@ -109,14 +109,19 @@ public class MangaCrawler {
 			return false;
 
 		mangaName = MangaCrawler.cleanFileName(mangaName);
+		mangaName = Helper.sanitizeFileDirectoryName(mangaName);
+		if (mangaName == null)
+			return false;
+
 		String mangaDirectory = MangaCrawler.rootDir + mangaName;
-		mangaDirectory = Helper.removeAccents(mangaDirectory);
+		System.out.println("Dir = " + mangaDirectory);
 
 		// Create the manga parent folder
 		File mangaDir = new File(mangaDirectory);
 		if (!mangaDir.exists() && mangaDir.mkdir()) {
 			System.out.println("Directory: " + mangaDirectory + " created");
 		} else if (!mangaDir.exists()) {
+			System.out.println("Fail to create directory " + mangaDirectory);
 			return false;
 		} else if (mangaDir.exists()) {
 			System.out.println("Directory: " + mangaDirectory
@@ -132,8 +137,11 @@ public class MangaCrawler {
 			String chapterLink = entry.getValue();
 
 			chapterName = MangaCrawler.cleanFileName(chapterName);
+			chapterName = Helper.sanitizeFileDirectoryName(chapterName);
+			if (chapterName == null)
+				continue;
+
 			String chapterDirectory = mangaDirectory + "\\" + chapterName;
-			chapterDirectory = Helper.removeAccents(chapterDirectory);
 
 			// Create the chapter subfolder
 			File chapterDir = new File(chapterDirectory);
@@ -179,7 +187,7 @@ public class MangaCrawler {
 
 	public static void main(String[] args) {
 		MangaCrawler crawler = new MangaCrawler(
-				"http://www.mangareader.net/230/ichigo-100.html");
+				"http://www.mangareader.net/1580/is.html");
 
 		if (crawler.crawl()) {
 
